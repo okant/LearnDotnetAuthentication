@@ -1,6 +1,3 @@
-global using AutoMapper;
-using LearnDotnetAuthentication.Data;
-
 namespace LearnDotnetAuthentication.Services.CharacterService;
 
 public class CharacterService: ICharacterService
@@ -14,9 +11,9 @@ public class CharacterService: ICharacterService
         _dataContext = dataContext;
     }
 
-    public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
+    public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters(int userId)
     {
-        var dbCharacters = await _dataContext.Characters.ToListAsync();
+        var dbCharacters = await _dataContext.Characters.Where(c => c.User.Id == userId).ToListAsync();
         var serviceResponse = new ServiceResponse<List<GetCharacterDto>>
         {
             Data = dbCharacters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList()
